@@ -4,8 +4,10 @@ I am learning WingLang Cloud Object oriented Programming Language based on Javas
 
 ## Resources
 - [Winglang website](https://www.winglang.io/)
-- [Winglang React + Wing Workshop](https://www.youtube.com/watch?v=LMDnTCRXzJU&list=PL-P8v-FRassYkSA4smpkbjq6s5FlVgHkb&ab_channel=WingProgrammingLanguage)
+- [Winglang Workshops](https://www.youtube.com/watch?v=LMDnTCRXzJU&list=PL-P8v-FRassYkSA4smpkbjq6s5FlVgHkb&ab_channel=WingProgrammingLanguage)
 - [Winglang Examples](https://github.com/winglang/examples/tree/main)
+- [React Workshop](https://github.com/winglang/workshop-react)
+- [Bedrock Workshop](https://github.com/winglang/workshop-bedrock)
 
 ## Commands
 
