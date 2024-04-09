@@ -1,9 +1,22 @@
-#Learning repo for WingLang
+# Learning repo for WingLang
 
+I am learning WingLang Cloud Object oriented Programming Language based on Javascript. Git repo is [here](https://github.com/winglang/wing/tree/main).
 
+## Resources
+- [Winglang website](https://www.winglang.io/)
+- [Winglang React + Wing Workshop](https://www.youtube.com/watch?v=LMDnTCRXzJU&list=PL-P8v-FRassYkSA4smpkbjq6s5FlVgHkb&ab_channel=WingProgrammingLanguage)
+- [Winglang Examples](https://github.com/winglang/examples/tree/main)
 
-Make empty project
+## Commands
+
+#### AWS configuration
+```bash
+npm install -g aws-cdk
+export AWS_PROFILE="aws-profile"
 ```
+
+#### Make empty project:
+```bash
 wing new empty
 Installing dependencies...
 
@@ -30,4 +43,22 @@ To help us identify issues early, we are collecting anonymous analytics.
 To turn this off, set WING_DISABLE_ANALYTICS=1.
 For more information see https://winglang.io/docs/analytics
 (This message will self-destruct after the first run)
+```
+
+#### To get AWS CDK working, do these commands:
+
+```bash
+cd winglang-directory
+export CDK_STACK_NAME="stack-name"
+wing compile --platform @winglang/platform-awscdk main.w
+cdk bootstap --app target/main.awscdk
+cdk deploy --app target/main.awscdk
+```
+
+#### Get cloudformation YAML of the app stack
+```bash
+cd winglang-directory
+export CDK_STACK_NAME="stack-name"
+wing compile --platform @winglang/platform-awscdk main.w
+cdk synth -a target/main.awscdk > template.yaml
 ```

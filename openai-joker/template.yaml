@@ -1,0 +1,432 @@
+Resources:
+  JokeStoreDA5349F7:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+  NewJokeTopic2790EE15:
+    Type: AWS::SNS::Topic
+  ComedianNextIDCD4F2889:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      BillingMode: PAY_PER_REQUEST
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+  SpanishTranslatorNextIDB9A63BEC:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      BillingMode: PAY_PER_REQUEST
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+  NewJokeOnMessage0LogGroup031D2945:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      RetentionInDays: 30
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+  NewJokeOnMessage0ServiceRole23A688F7:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+  NewJokeOnMessage0ServiceRoleDefaultPolicyC5C12DE1:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: dynamodb:UpdateItem
+            Effect: Allow
+            Resource:
+              Fn::GetAtt:
+                - SpanishTranslatorNextIDB9A63BEC
+                - Arn
+          - Action:
+              - s3:PutObject*
+              - s3:Abort*
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - JokeStoreDA5349F7
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - JokeStoreDA5349F7
+                        - Arn
+                    - /*
+          - Action: secretsmanager:GetSecretValue
+            Effect: Allow
+            Resource:
+              Fn::Join:
+                - ""
+                - - "arn:"
+                  - Ref: AWS::Partition
+                  - ":secretsmanager:"
+                  - Ref: AWS::Region
+                  - ":"
+                  - Ref: AWS::AccountId
+                  - :secret:OAIAPIKey-??????
+        Version: "2012-10-17"
+      PolicyName: NewJokeOnMessage0ServiceRoleDefaultPolicyC5C12DE1
+      Roles:
+        - Ref: NewJokeOnMessage0ServiceRole23A688F7
+  NewJokeOnMessage0A4284EAB:
+    Type: AWS::Lambda::Function
+    Properties:
+      Architectures:
+        - arm64
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 5e082d778573fe03c31e7d83cf21b9b418f9a71db81472193e2b8d8405773626.zip
+      Environment:
+        Variables:
+          NODE_OPTIONS: --enable-source-maps
+          WING_TARGET: awscdk
+          DYNAMODB_TABLE_NAME_bb13c5ca:
+            Ref: SpanishTranslatorNextIDB9A63BEC
+          BUCKET_NAME_084e8b2a:
+            Ref: JokeStoreDA5349F7
+          SECRET_ARN_543212f4:
+            Fn::Join:
+              - ""
+              - - "arn:"
+                - Ref: AWS::Partition
+                - ":secretsmanager:"
+                - Ref: AWS::Region
+                - ":"
+                - Ref: AWS::AccountId
+                - :secret:OAIAPIKey
+      Handler: index.handler
+      LoggingConfig:
+        LogGroup:
+          Ref: NewJokeOnMessage0LogGroup031D2945
+      MemorySize: 1024
+      Role:
+        Fn::GetAtt:
+          - NewJokeOnMessage0ServiceRole23A688F7
+          - Arn
+      Runtime: nodejs20.x
+      Timeout: 60
+    DependsOn:
+      - NewJokeOnMessage0ServiceRoleDefaultPolicyC5C12DE1
+      - NewJokeOnMessage0ServiceRole23A688F7
+  NewJokeOnMessage0AllowInvokeopenaistackNewJokeTopicBF1254CC1A74A73B:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - NewJokeOnMessage0A4284EAB
+          - Arn
+      Principal: sns.amazonaws.com
+      SourceArn:
+        Ref: NewJokeTopic2790EE15
+  NewJokeOnMessage0TopicF0E20DDB:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Endpoint:
+        Fn::GetAtt:
+          - NewJokeOnMessage0A4284EAB
+          - Arn
+      Protocol: lambda
+      TopicArn:
+        Ref: NewJokeTopic2790EE15
+  HebrewTranslatorNextIDA126B05F:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      BillingMode: PAY_PER_REQUEST
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+  NewJokeOnMessage1LogGroupBB8440B4:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      RetentionInDays: 30
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+  NewJokeOnMessage1ServiceRole29343DE0:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+  NewJokeOnMessage1ServiceRoleDefaultPolicy6625D655:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: dynamodb:UpdateItem
+            Effect: Allow
+            Resource:
+              Fn::GetAtt:
+                - HebrewTranslatorNextIDA126B05F
+                - Arn
+          - Action:
+              - s3:PutObject*
+              - s3:Abort*
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - JokeStoreDA5349F7
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - JokeStoreDA5349F7
+                        - Arn
+                    - /*
+          - Action: secretsmanager:GetSecretValue
+            Effect: Allow
+            Resource:
+              Fn::Join:
+                - ""
+                - - "arn:"
+                  - Ref: AWS::Partition
+                  - ":secretsmanager:"
+                  - Ref: AWS::Region
+                  - ":"
+                  - Ref: AWS::AccountId
+                  - :secret:OAIAPIKey-??????
+        Version: "2012-10-17"
+      PolicyName: NewJokeOnMessage1ServiceRoleDefaultPolicy6625D655
+      Roles:
+        - Ref: NewJokeOnMessage1ServiceRole29343DE0
+  NewJokeOnMessage19CCCF6EE:
+    Type: AWS::Lambda::Function
+    Properties:
+      Architectures:
+        - arm64
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 4c12056ca4286c00b8e50b8121789ee04c1c910e0d9446648ded1bd04a81a0a3.zip
+      Environment:
+        Variables:
+          NODE_OPTIONS: --enable-source-maps
+          WING_TARGET: awscdk
+          DYNAMODB_TABLE_NAME_8408e756:
+            Ref: HebrewTranslatorNextIDA126B05F
+          BUCKET_NAME_084e8b2a:
+            Ref: JokeStoreDA5349F7
+          SECRET_ARN_543212f4:
+            Fn::Join:
+              - ""
+              - - "arn:"
+                - Ref: AWS::Partition
+                - ":secretsmanager:"
+                - Ref: AWS::Region
+                - ":"
+                - Ref: AWS::AccountId
+                - :secret:OAIAPIKey
+      Handler: index.handler
+      LoggingConfig:
+        LogGroup:
+          Ref: NewJokeOnMessage1LogGroupBB8440B4
+      MemorySize: 1024
+      Role:
+        Fn::GetAtt:
+          - NewJokeOnMessage1ServiceRole29343DE0
+          - Arn
+      Runtime: nodejs20.x
+      Timeout: 60
+    DependsOn:
+      - NewJokeOnMessage1ServiceRoleDefaultPolicy6625D655
+      - NewJokeOnMessage1ServiceRole29343DE0
+  NewJokeOnMessage1AllowInvokeopenaistackNewJokeTopicBF1254CC62B7BC5F:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - NewJokeOnMessage19CCCF6EE
+          - Arn
+      Principal: sns.amazonaws.com
+      SourceArn:
+        Ref: NewJokeTopic2790EE15
+  NewJokeOnMessage1TopicBDC9FF4B:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Endpoint:
+        Fn::GetAtt:
+          - NewJokeOnMessage19CCCF6EE
+          - Arn
+      Protocol: lambda
+      TopicArn:
+        Ref: NewJokeTopic2790EE15
+  STARTHERELogGroupA93C7F71:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      RetentionInDays: 30
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+  STARTHEREServiceRoleB3239585:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+  STARTHEREServiceRoleDefaultPolicyDD7FB13C:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: sns:Publish
+            Effect: Allow
+            Resource:
+              Ref: NewJokeTopic2790EE15
+          - Action: dynamodb:UpdateItem
+            Effect: Allow
+            Resource:
+              Fn::GetAtt:
+                - ComedianNextIDCD4F2889
+                - Arn
+          - Action:
+              - s3:PutObject*
+              - s3:Abort*
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - JokeStoreDA5349F7
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - JokeStoreDA5349F7
+                        - Arn
+                    - /*
+          - Action: secretsmanager:GetSecretValue
+            Effect: Allow
+            Resource:
+              Fn::Join:
+                - ""
+                - - "arn:"
+                  - Ref: AWS::Partition
+                  - ":secretsmanager:"
+                  - Ref: AWS::Region
+                  - ":"
+                  - Ref: AWS::AccountId
+                  - :secret:OAIAPIKey-??????
+        Version: "2012-10-17"
+      PolicyName: STARTHEREServiceRoleDefaultPolicyDD7FB13C
+      Roles:
+        - Ref: STARTHEREServiceRoleB3239585
+  STARTHERE5A760814:
+    Type: AWS::Lambda::Function
+    Properties:
+      Architectures:
+        - arm64
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: d67ba57abd291137eda6c3d9eebd8d24d60d887e24e542ae18f99991da18b0eb.zip
+      Environment:
+        Variables:
+          NODE_OPTIONS: --enable-source-maps
+          WING_TARGET: awscdk
+          TOPIC_ARN_f3e39617:
+            Ref: NewJokeTopic2790EE15
+          DYNAMODB_TABLE_NAME_1b434323:
+            Ref: ComedianNextIDCD4F2889
+          BUCKET_NAME_084e8b2a:
+            Ref: JokeStoreDA5349F7
+          SECRET_ARN_543212f4:
+            Fn::Join:
+              - ""
+              - - "arn:"
+                - Ref: AWS::Partition
+                - ":secretsmanager:"
+                - Ref: AWS::Region
+                - ":"
+                - Ref: AWS::AccountId
+                - :secret:OAIAPIKey
+      Handler: index.handler
+      LoggingConfig:
+        LogGroup:
+          Ref: STARTHERELogGroupA93C7F71
+      MemorySize: 1024
+      Role:
+        Fn::GetAtt:
+          - STARTHEREServiceRoleB3239585
+          - Arn
+      Runtime: nodejs20.x
+      Timeout: 60
+    DependsOn:
+      - STARTHEREServiceRoleDefaultPolicyDD7FB13C
+      - STARTHEREServiceRoleB3239585
+Parameters:
+  BootstrapVersion:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cdk-bootstrap/hnb659fds/version
+    Description: Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]
+Rules:
+  CheckBootstrapVersion:
+    Assertions:
+      - Assert:
+          Fn::Not:
+            - Fn::Contains:
+                - - "1"
+                  - "2"
+                  - "3"
+                  - "4"
+                  - "5"
+                - Ref: BootstrapVersion
+        AssertDescription: CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.
+

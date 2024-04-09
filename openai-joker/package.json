@@ -1,6 +1,12 @@
 {
   "dependencies": {
+    "@winglang/platform-awscdk": "^0.67.20",
     "@winglibs/openai": "^0.0.2",
     "openai": "^4.28.4"
+  },
+  "overrides": {
+    "@winglang/platform-awscdk": {
+      "express": "^4.19.2"
+    }
   }
 }
